@@ -18,7 +18,7 @@ class AssetController extends Controller
      */
     public function index()
     {
-        $assets = Asset::all();
+        $assets = Asset::paginate(10);
         return ResponseController::response(true, $assets, Response::HTTP_OK);
     }
 

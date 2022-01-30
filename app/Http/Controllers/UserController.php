@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::all();
+        $user = User::paginate(10);
         return ResponseController::response(true, $user, Response::HTTP_OK);
     }
 

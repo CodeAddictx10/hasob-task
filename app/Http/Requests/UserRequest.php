@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -32,17 +33,19 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        $update = false;
         if(request()->isMethod('POST')){
             $_rule = 'required';
         }elseif(request()->isMethod('PUT')){
             $_rule = 'sometimes';
         }
+        
         return [
             "first_name"=>"$_rule|min:3",
             "last_name"=>"$_rule|min:3",
-            "email"=>"$_rule|email|unique:users",
-            "password"=>[Rule::when(request()->routeIs('user.store'), 'required'),Rule::when(request()->routeIs('user.store'), 'optional'), "min:6"],
-            "phone_number"=>"$_rule|unique:users",
+            "email"=>[$_rule, 'email', Rule::when(request()->routeIs('user.store'), 'unique:users'), Rule::when(request()->routeIs('user.update'), 'unique:users,email,'.Auth::user()->id)], //To check email uniqueness
+            "password"=>[Rule::when(request()->routeIs('user.store'), 'required'),Rule::when(request()->routeIs('user.update'), 'optional'), "min:6"],
+            "phone_number"=>[$_rule, Rule::when(request()->routeIs('user.store'), 'unique:users'), Rule::when(request()->routeIs('user.update'),'unique:users,phone_number,'.Auth::user()->id)],
             "picture_url"=>"$_rule|url"
         ];
     }

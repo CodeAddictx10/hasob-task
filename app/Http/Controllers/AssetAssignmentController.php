@@ -20,7 +20,7 @@ class AssetAssignmentController extends Controller
     public function index()
     {
         //
-        $assignment = AssetAssignment::with('user')->get();
+        $assignment = AssetAssignment::with('user')->paginate(10);
         return ResponseController::response(true, $assignment, Response::HTTP_OK);
     }
 

@@ -19,7 +19,7 @@ class VendorController extends Controller
     public function index()
     {
         //
-        $vendor = Vendor::all();
+        $vendor = Vendor::paginate(10);
         return ResponseController::response(true, $vendor, Response::HTTP_OK);
     }
 
